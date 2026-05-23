@@ -134,23 +134,22 @@ export function Updates() {
     };
     rafId = requestAnimationFrame(tick);
 
-    // Pause on any sign of user intent
+    // Pause on hover, resume immediately on leave
     const onEnter = () => {
       pausedRef.current = true;
       if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     };
-    const onLeave = () => bumpPause();
+    const onLeave = () => {
+      pausedRef.current = false;
+    };
     const onWheel = () => bumpPause();
-    const onPointerDown = onEnter;
-    const onPointerUp = () => bumpPause();
+    // Touch: pause while finger is down, resume after lift
     const onTouchStart = onEnter;
     const onTouchEnd = () => bumpPause();
 
     el.addEventListener("mouseenter", onEnter);
     el.addEventListener("mouseleave", onLeave);
     el.addEventListener("wheel", onWheel, { passive: true });
-    el.addEventListener("pointerdown", onPointerDown);
-    el.addEventListener("pointerup", onPointerUp);
     el.addEventListener("touchstart", onTouchStart, { passive: true });
     el.addEventListener("touchend", onTouchEnd);
 
@@ -167,8 +166,6 @@ export function Updates() {
       el.removeEventListener("mouseenter", onEnter);
       el.removeEventListener("mouseleave", onLeave);
       el.removeEventListener("wheel", onWheel);
-      el.removeEventListener("pointerdown", onPointerDown);
-      el.removeEventListener("pointerup", onPointerUp);
       el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("touchend", onTouchEnd);
       document.removeEventListener("visibilitychange", onVisibility);

@@ -162,6 +162,15 @@ body {
   transform: translateY(-120%);
 }
 
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar {
+  -ms-overflow-style: none;   /* IE / Edge */
+  scrollbar-width: none;      /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari, Opera */
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

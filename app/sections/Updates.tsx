@@ -266,12 +266,8 @@ export function Updates() {
             flex gap-4 sm:gap-5
             overflow-x-auto overscroll-x-contain
             px-5 sm:px-6 lg:px-10
-            pb-4
-            [scrollbar-width:thin]
-            [&::-webkit-scrollbar]:h-1.5
-            [&::-webkit-scrollbar-thumb]:bg-white/15
-            [&::-webkit-scrollbar-thumb]:rounded-full
-            [&::-webkit-scrollbar-track]:bg-transparent
+            pb-2
+            no-scrollbar
           "
         >
           {updates.map((u) => (

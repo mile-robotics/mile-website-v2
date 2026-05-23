@@ -1,4 +1,4 @@
-import { Navbar } from "./components/Navbar";
+import { Chrome } from "./components/Chrome";
 import { Hero } from "./sections/Hero";
 import { Problem } from "./sections/Problem";
 import { Solution } from "./sections/Solution";
@@ -9,7 +9,7 @@ import { Footer } from "./sections/Footer";
 export default function Home() {
   return (
     <main className="relative">
-      <Navbar />
+      <Chrome />
       <Hero />
       <Problem />
       <Solution />

@@ -31,34 +31,38 @@ export function Hero() {
         <source src="/hero.mp4" type="video/mp4" />
       </video>
 
-      <div className="relative mx-auto max-w-container w-full px-6 lg:px-10 pt-36 pb-24">
+      <div className="relative mx-auto max-w-container w-full px-5 sm:px-6 lg:px-10 pt-32 sm:pt-36 pb-20 sm:pb-24">
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="eyebrow"
         >
-          Mile Robotics
+          Multimodal Immersive Lab Environments
         </motion.p>
 
         <motion.h1
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="headline mt-6 text-[clamp(2.5rem,7vw,6.5rem)] max-w-[18ch]"
+          className="headline mt-6 text-[clamp(2.25rem,7vw,6.5rem)] max-w-[18ch]"
         >
-          A Human Data Layer{" "}
+          A Human Data Layer for{" "}
           <span className="bg-gradient-1 bg-clip-text text-transparent animate-gradient-pan [background-size:200%_200%]">
-            for Robotics
+            Robotics
           </span>{" "}
-          and Physical AI.
+          and{" "}
+          <span className="bg-gradient-3 bg-clip-text text-transparent animate-gradient-pan [background-size:200%_200%] [animation-delay:-3s]">
+            Physical AI
+          </span>
+          .
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.45 }}
-          className="subhead mt-8 max-w-[58ch] text-lg md:text-xl"
+          className="subhead mt-6 sm:mt-8 max-w-[58ch] text-base sm:text-lg md:text-xl"
         >
           We turn immersive, game-like simulations into training data for
           robots. Every action, hesitation, and correction becomes a signal that
@@ -105,7 +109,7 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.2 }}
-          className="absolute bottom-10 left-6 lg:left-10 text-xs uppercase tracking-[0.2em] text-white/50 flex items-center gap-3"
+          className="hidden sm:flex absolute bottom-10 left-6 lg:left-10 text-xs uppercase tracking-[0.2em] text-white/50 items-center gap-3"
         >
           <span className="block h-px w-10 bg-white/40" />
           Scroll

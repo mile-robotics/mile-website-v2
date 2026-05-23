@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 
 const cards = [
   {
-    title: "Immersive Simulation",
-    body: "Game-like environments on Desktop, VR, and Mobile. Domain-specific scenarios for clean energy, space, and construction — built to feel like the real thing.",
+    title: "Immersive Simulations",
+    body: "Game-like environments on Desktop, VR, and Mobile. Domain-specific scenarios in sectors such as clean energy, space, and construction — built to feel like the real thing.",
     accent: "from-electric-violet/50 to-transparent",
   },
   {
@@ -29,12 +29,12 @@ const steps = [
   {
     n: "01",
     label: "Build the world",
-    text: "Recreate the customer’s site as an interactive twin.",
+    text: "Recreate the customer’s site as an interactive digital twin.",
   },
   {
     n: "02",
     label: "Play the scenarios",
-    text: "Humans operate the robot through gamified missions.",
+    text: "Humans and autonomous robots navigate through gamified missions and unpredictable events.",
   },
   {
     n: "03",
@@ -52,9 +52,9 @@ export function Solution() {
   return (
     <section
       id="solution"
-      className="relative py-28 md:py-36 border-t border-white/5"
+      className="relative py-20 sm:py-28 md:py-36 border-t border-white/5"
     >
-      <div className="mx-auto max-w-container px-6 lg:px-10">
+      <div className="mx-auto max-w-container px-5 sm:px-6 lg:px-10">
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -71,12 +71,12 @@ export function Solution() {
           transition={{ duration: 0.7 }}
           className="headline mt-6 text-[clamp(2rem,4.5vw,3.75rem)] max-w-[22ch]"
         >
-          A human data layer for physical AI — built to be auditable,
-          scientific, and accessible.
+          Next generation data infrastructure for robotics and physical AI —
+          built to be auditable, scientific, and accessible.
         </motion.h2>
 
         {/* Solution cards */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
           {cards.map((c, i) => (
             <motion.article
               key={c.title}
@@ -84,7 +84,7 @@ export function Solution() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="card-surface group relative overflow-hidden rounded-3xl p-8 md:p-10 transition-all hover:-translate-y-1 hover:border-white/20"
+              className="card-surface group relative overflow-hidden rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 transition-all hover:-translate-y-1 hover:border-white/20"
             >
               <div
                 className={`absolute -inset-px rounded-3xl bg-gradient-to-br ${c.accent} opacity-0 group-hover:opacity-100 transition-opacity blur-2xl pointer-events-none`}
@@ -103,8 +103,8 @@ export function Solution() {
         </div>
 
         {/* How it flows */}
-        <div className="mt-20 rounded-3xl border border-white/8 bg-surface-raised p-8 md:p-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="mt-16 sm:mt-20 rounded-2xl sm:rounded-3xl border border-white/10 bg-surface-raised p-6 sm:p-8 md:p-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {steps.map((s, i) => (
               <motion.div
                 key={s.n}

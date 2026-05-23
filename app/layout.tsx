@@ -4,11 +4,11 @@ import { SmoothScroll } from "./components/SmoothScroll";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://milelabs.co"),
-  title: "Mile Robotics — A Human Data Layer for Robotics and Physical AI",
+  title: "Mile Robotics. A Human Data Layer for Robotics and Physical AI.",
   description:
     "Mile Robotics turns immersive, game-like simulations into a human data layer for robots. Every action, hesitation, and correction becomes training data for physical AI.",
   openGraph: {
-    title: "Mile Robotics",
+    title: "Mile Robotics. A Human Data Layer for Robotics and Physical AI.",
     description:
       "A Human Data Layer for Robotics and Physical AI.",
     url: "https://milelabs.co",
@@ -16,7 +16,11 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: {
-    icon: "/logo/mile-svg-icon-dark.svg",
+    icon: [
+      { url: "/logo/mile-jpg-icon-dark.jpg", type: "image/jpeg" },
+    ],
+    shortcut: "/logo/mile-jpg-icon-dark.jpg",
+    apple: "/logo/mile-jpg-icon-dark.jpg",
   },
 };
 

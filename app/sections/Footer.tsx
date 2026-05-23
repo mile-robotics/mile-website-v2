@@ -3,8 +3,8 @@ import Image from "next/image";
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="relative border-t border-white/5 py-16">
-      <div className="mx-auto max-w-container px-6 lg:px-10">
+    <footer className="relative border-t border-white/5 py-12 sm:py-16">
+      <div className="mx-auto max-w-container px-5 sm:px-6 lg:px-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
           <div className="md:col-span-1">
             <a
@@ -13,16 +13,16 @@ export function Footer() {
               className="inline-flex items-center"
             >
               <Image
-                src="/logo/mile-png-horizontal-dark-long.png"
+                src="/logo/mile-png-horizontal-dark-cropped.png"
                 alt="Mile Robotics"
-                width={520}
-                height={64}
-                className="h-8 w-auto"
+                width={2001}
+                height={290}
+                className="h-6 sm:h-7 w-auto"
               />
             </a>
             <p className="mt-6 text-sm text-white/55 max-w-[40ch] leading-relaxed">
-              A human data layer for robotics and physical AI. Built quietly in
-              Manchester, UK.
+              A human data layer for robotics and physical AI. Built in
+              Manchester, United Kingdom.
             </p>
           </div>
 

@@ -52,9 +52,9 @@ export function CTA() {
   return (
     <section
       id="contact"
-      className="relative py-28 md:py-36 border-t border-white/5"
+      className="relative py-20 sm:py-28 md:py-36 border-t border-white/5"
     >
-      <div className="mx-auto max-w-container px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <div className="mx-auto max-w-container px-5 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
         <div>
           <motion.p
             initial={{ opacity: 0, y: 8 }}
@@ -105,9 +105,9 @@ export function CTA() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
           onSubmit={onSubmit}
-          className="rounded-3xl border border-white/8 bg-surface-raised p-8 md:p-10"
+          className="rounded-2xl sm:rounded-3xl border border-white/10 bg-surface-raised p-6 sm:p-8 md:p-10"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             <Field label="Name">
               <input
                 required

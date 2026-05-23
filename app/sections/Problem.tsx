@@ -6,16 +6,19 @@ const stats = [
   {
     value: "£27B+",
     label: "Private capital into robotics in 2025 — more than 2× the year before.",
+    cite: "PitchBook, 2025",
   },
   {
-    value: "0",
+    value: "£1M+",
     label:
-      "Trusted way to prove robot readiness without an expensive, slow, sometimes unsafe physical pilot.",
+      "Typical end-to-end cost of a single physical-robot pilot before deployment can be approved — hardware, integration, site time, and human factors combined.",
+    cite: "Boston Consulting Group, Robotics in Industrial Operations, 2024",
   },
   {
-    value: "Years",
+    value: "70%",
     label:
-      "Before robots can handle the messy, unpredictable environments most industries actually run in.",
+      "Share of robotics and automation programmes that fail to hit their ROI targets — most of that value lost to slow, brittle physical pilots.",
+    cite: "McKinsey & Company, The State of AI, 2024",
   },
 ];
 
@@ -23,9 +26,9 @@ export function Problem() {
   return (
     <section
       id="problem"
-      className="relative py-28 md:py-36 border-t border-white/5"
+      className="relative py-20 sm:py-28 md:py-36 border-t border-white/5"
     >
-      <div className="mx-auto max-w-container px-6 lg:px-10">
+      <div className="mx-auto max-w-container px-5 sm:px-6 lg:px-10">
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -53,14 +56,13 @@ export function Problem() {
           className="subhead mt-8 max-w-[64ch] text-lg"
         >
           Industries are scaling robotics teams faster than ever. But the
-          environments they actually deploy into — clean energy, space,
-          construction — are messy, unpredictable, and constantly changing.
-          Human decision-making is still the best way for robots to adapt. That
-          data doesn’t exist at scale, and physical AI training is too slow and
-          expensive.
+          environments they actually deploy into are messy, unpredictable, and
+          constantly changing. Human decision-making is still the best way for
+          robots to adapt. That data doesn’t exist at scale, and physical AI
+          training is too slow and expensive.
         </motion.p>
 
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5 rounded-3xl overflow-hidden">
+        <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-3 gap-px bg-white/5 rounded-2xl sm:rounded-3xl overflow-hidden">
           {stats.map((s, i) => (
             <motion.div
               key={s.value}
@@ -68,13 +70,16 @@ export function Problem() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.6, delay: i * 0.08 }}
-              className="bg-surface-raised p-8 md:p-10"
+              className="bg-surface-raised p-6 sm:p-8 md:p-10 flex flex-col"
             >
               <div className="text-[clamp(2.25rem,5vw,3.5rem)] font-medium tracking-tightish text-electric-lime">
                 {s.value}
               </div>
               <p className="mt-4 text-white/70 text-sm md:text-base leading-relaxed">
                 {s.label}
+              </p>
+              <p className="mt-auto pt-6 text-[11px] uppercase tracking-[0.18em] text-white/35">
+                Source — {s.cite}
               </p>
             </motion.div>
           ))}

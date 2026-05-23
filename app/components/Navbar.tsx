@@ -11,51 +11,48 @@ const links = [
   { href: "#contact", label: "Contact" },
 ];
 
-export function Navbar() {
-  const [hidden, setHidden] = useState(false);
+export function Navbar({ hidden }: { hidden: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    let lastY = window.scrollY;
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 8);
-      // Hide on scroll down, show on scroll up
-      if (y > 80 && y > lastY) {
-        setHidden(true);
-      } else {
-        setHidden(false);
-      }
-      lastY = y;
-    };
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Lock body scroll when the mobile drawer is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   return (
     <header
       className={clsx(
         "fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-out",
         hidden && !mobileOpen ? "nav-hidden" : "translate-y-0",
-        scrolled
+        scrolled || mobileOpen
           ? "backdrop-blur-md bg-black/55 border-b border-white/5"
           : "bg-transparent"
       )}
     >
-      <nav className="mx-auto max-w-container px-6 lg:px-10 py-4 flex items-center justify-between">
+      <nav className="mx-auto max-w-container px-5 sm:px-6 lg:px-10 py-3 sm:py-4 flex items-center justify-between gap-4">
         <a
           href="#hero"
           aria-label="Mile Robotics — go to top"
-          className="relative inline-flex items-center"
+          className="relative inline-flex items-center -my-2 shrink-0"
         >
           <Image
-            src="/logo/mile-png-horizontal-dark-long.png"
+            src="/logo/mile-png-horizontal-dark-cropped.png"
             alt="Mile Robotics"
-            width={520}
-            height={64}
+            width={2001}
+            height={290}
             priority
-            className="h-7 md:h-8 w-auto"
+            className="h-6 sm:h-7 md:h-8 w-auto"
           />
         </a>
 
@@ -72,10 +69,10 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <a
             href="#"
-            className="hidden sm:inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium bg-electric-lime text-black hover:bg-white transition-colors"
+            className="hidden xs:inline-flex sm:inline-flex items-center gap-2 rounded-full px-4 sm:px-5 py-2.5 text-sm font-medium bg-electric-lime text-black hover:bg-white transition-colors whitespace-nowrap"
           >
             Ready to Play
             <svg
@@ -95,9 +92,10 @@ export function Navbar() {
             </svg>
           </a>
           <button
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
-            className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15"
+            className="md:hidden inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/15"
           >
             <span className="sr-only">Menu</span>
             <div className="space-y-1">
@@ -125,23 +123,24 @@ export function Navbar() {
       </nav>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-white/5 bg-black/90 backdrop-blur-md">
-          <ul className="px-6 py-6 space-y-4 text-base font-light">
+        <div className="md:hidden border-t border-white/5 bg-black/95 backdrop-blur-md">
+          <ul className="px-5 py-6 space-y-1 text-lg font-light">
             {links.map((l) => (
               <li key={l.href}>
                 <a
                   href={l.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block py-1 text-white/80 hover:text-electric-lime"
+                  className="block py-3 text-white/80 hover:text-electric-lime"
                 >
                   {l.label}
                 </a>
               </li>
             ))}
-            <li>
+            <li className="pt-4">
               <a
                 href="#"
-                className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium bg-electric-lime text-black"
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium bg-electric-lime text-black"
               >
                 Ready to Play →
               </a>

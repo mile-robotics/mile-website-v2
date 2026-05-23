@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\\\Users\\\\MBGNWPB2\\\\Documents\\\\GitHub\\\\mile-website-v2\")",
+      "PowerShell(python -c \"import pdfplumber; print\\(pdfplumber.__version__\\)\")",
+      "PowerShell(Get-ChildItem -Path \"G:\\\\My Drive\\\\10 Marketing and Branding\\\\202605 Branding Materials\" -Recurse | Where-Object { -not $_.PSIsContainer } | Select-Object FullName | Format-Table -AutoSize)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3057)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

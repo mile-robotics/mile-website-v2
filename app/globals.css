@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* TT Firs Neue — trial weights per Brand Guidelines (no Bold) */
+@font-face {
+  font-family: "TT Firs Neue";
+  src: url("/fonts/TT Firs Neue Trial Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "TT Firs Neue";
+  src: url("/fonts/TT Firs Neue Trial ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "TT Firs Neue";
+  src: url("/fonts/TT Firs Neue Trial Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "TT Firs Neue";
+  src: url("/fonts/TT Firs Neue Trial Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "TT Firs Neue";
+  src: url("/fonts/TT Firs Neue Trial Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "TT Firs Neue";
+  src: url("/fonts/TT Firs Neue Trial DemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-firs-neue: "TT Firs Neue", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #000000;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--font-firs-neue);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+/* Prevent bold rendering — Brand Guidelines instruct no bold */
+strong,
+b {
+  font-weight: 500;
+}
+
+::selection {
+  background: #a9f000;
+  color: #000000;
+}
+
+/* Hide horizontal overflow from marquee */
+html {
+  scroll-behavior: smooth;
+}
+body {
+  overflow-x: hidden;
+}
+
+/* Section heading utility */
+.eyebrow {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #a9f000;
+  font-weight: 500;
+}
+
+.headline {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+.subhead {
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 300;
+}
+
+.card-surface {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+/* Animated radial backdrop for the hero */
+.aurora {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      40rem 24rem at 15% 30%,
+      rgba(97, 4, 235, 0.35),
+      transparent 60%
+    ),
+    radial-gradient(
+      36rem 22rem at 85% 60%,
+      rgba(9, 148, 109, 0.28),
+      transparent 60%
+    ),
+    radial-gradient(
+      30rem 18rem at 60% 90%,
+      rgba(169, 240, 0, 0.18),
+      transparent 60%
+    );
+  filter: blur(2px);
+  animation: aurora-shift 18s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes aurora-shift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(-2%, 1%, 0) scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* Grid backdrop reminiscent of MSquared / Spline */
+.grid-backdrop {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at 50% 40%, #000 30%, transparent 75%);
+}
+
+/* Nav hide-on-scroll-down helper */
+.nav-hidden {
+  transform: translateY(-120%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

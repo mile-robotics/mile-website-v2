@@ -97,6 +97,36 @@ export function CTA() {
               </a>
             </div>
           </div>
+
+          {/* ── Survey CTA ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="mt-10 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 sm:p-7"
+          >
+            <p className="text-sm text-white/80 leading-relaxed">
+              <span className="text-electric-lime font-medium">Help shape the future of robotics deployment.</span>{" "}
+              Share what's really happening on the ground — the gaps, the friction, the breakthroughs.
+              Your perspective drives what gets built next.
+            </p>
+            <a
+              href="/survey"
+              className="mt-5 inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium border border-electric-lime/30 text-electric-lime hover:bg-electric-lime hover:text-black transition-all duration-300"
+            >
+              Share your insight
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" aria-hidden>
+                <path
+                  d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+          </motion.div>
         </div>
 
         <motion.form

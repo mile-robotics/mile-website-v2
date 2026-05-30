@@ -29,13 +29,6 @@ const row1Updates: Update[] = [
   },
   {
     date: "May 2026",
-    tag: "Milestone",
-    title: "Registered with Companies House",
-    accent: "bg-electric-lime/15",
-    image: "/updates/companies-house-registration.jpg",
-  },
-  {
-    date: "May 2026",
     tag: "Pilot",
     title: "Ongoing pilot with IceNine Robotics Limited",
     accent: "bg-sky-blue/15",
@@ -47,13 +40,6 @@ const row1Updates: Update[] = [
     title: "Cohort 7 — Greater Manchester Digital Security Hub (DiSH) Accelerator",
     accent: "bg-coral/15",
     image: "/updates/dish-accelerator-cohort-7.jpg",
-  },
-  {
-    date: "From Jun 2026",
-    tag: "Funding",
-    title: "Non-dilutive grant funding round",
-    accent: "bg-electric-violet/15",
-    image: "/updates/grant-funding-round.jpg",
   },
 ];
 

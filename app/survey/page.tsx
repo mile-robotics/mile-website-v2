@@ -412,6 +412,23 @@ function SurveyFlow({
     ((currentQ + (q3Phase === "rank" ? 0.5 : 0)) / TOTAL) * 100
   );
 
+  // ── Auto-advance timer (Typeform-style) ───────────────────────────────────
+  const autoAdvanceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear pending auto-advance whenever the question changes or on unmount
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    };
+  }, [currentQ]);
+
+  const scheduleAutoAdvance = () => {
+    if (autoAdvanceTimer.current) clearTimeout(autoAdvanceTimer.current);
+    autoAdvanceTimer.current = setTimeout(() => {
+      onAdvance();
+    }, 400);
+  };
+
   // Enter-key shortcut (skip on textarea questions: Q5=4, Q7=6, Q10=9)
   useEffect(() => {
     const textareaQs = new Set([4, 6, 9]);
@@ -440,7 +457,10 @@ function SurveyFlow({
                 key={opt}
                 label={opt}
                 selected={answers.q1 === opt}
-                onClick={() => setAnswers((a) => ({ ...a, q1: opt }))}
+                onClick={() => {
+                  setAnswers((a) => ({ ...a, q1: opt }));
+                  if (opt !== "Other") scheduleAutoAdvance();
+                }}
               />
             ))}
             {answers.q1 === "Other" && (
@@ -468,7 +488,10 @@ function SurveyFlow({
                 key={opt}
                 label={opt}
                 selected={answers.q2 === opt}
-                onClick={() => setAnswers((a) => ({ ...a, q2: opt }))}
+                onClick={() => {
+                  setAnswers((a) => ({ ...a, q2: opt }));
+                  scheduleAutoAdvance();
+                }}
               />
             ))}
           </QuestionShell>
@@ -538,7 +561,10 @@ function SurveyFlow({
           >
             <LikertScale
               value={answers.q4}
-              onChange={(v) => setAnswers((a) => ({ ...a, q4: v }))}
+              onChange={(v) => {
+                setAnswers((a) => ({ ...a, q4: v }));
+                scheduleAutoAdvance();
+              }}
             />
           </QuestionShell>
         );
@@ -629,7 +655,10 @@ function SurveyFlow({
                 key={opt}
                 label={opt}
                 selected={answers.q8 === opt}
-                onClick={() => setAnswers((a) => ({ ...a, q8: opt }))}
+                onClick={() => {
+                  setAnswers((a) => ({ ...a, q8: opt }));
+                  scheduleAutoAdvance();
+                }}
               />
             ))}
           </QuestionShell>

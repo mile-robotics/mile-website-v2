@@ -24,6 +24,8 @@ interface Answers {
   q5: string;
   q6Likert: number | null;
   q6Open: string;
+  q6Approaches: string[];
+  q6ApproachesOther: string;
   q7: string;
   q8: string;
   q9: string[];
@@ -43,6 +45,8 @@ const EMPTY: Answers = {
   q5: "",
   q6Likert: null,
   q6Open: "",
+  q6Approaches: [],
+  q6ApproachesOther: "",
   q7: "",
   q8: "",
   q9: [],
@@ -79,6 +83,7 @@ const Q3_OPTS = [
   "Robots behaving reliably in real, unstructured, unpredictable environments",
   "Convincing leadership or procurement that a robot is genuinely ready to deploy",
   "Collecting enough relevant training or validation data in our specific environment",
+  "Retaining or transferring the knowledge of experienced engineers or operators who understand our specific environment",
   "The cost and time of physical pilot testing",
   "Getting operators to trust and work alongside robots",
   "Safety compliance and regulatory approvals",
@@ -100,6 +105,15 @@ const Q8_OPTS = [
   "High (3–6 months, £100K–£500K)",
   "Very high or often not feasible (6+ months, or restricted by safety / site access)",
   "We don't typically run physical pilots",
+];
+
+const Q6_APPROACHES_OPTS = [
+  "Physical pilot on an active site",
+  "Controlled lab or test-facility testing",
+  "Computer simulation or digital twin",
+  "Expert review or engineering sign-off",
+  "External assessment or third-party validation",
+  "Other",
 ];
 
 const Q9_OPTS = [
@@ -375,6 +389,7 @@ interface FlowProps {
   onBack: () => void;
   toggleQ3: (opt: string) => void;
   toggleQ3Rank: (opt: string) => void;
+  toggleQ6Approaches: (opt: string) => void;
   toggleQ9: (opt: string) => void;
 }
 
@@ -390,6 +405,7 @@ function SurveyFlow({
   onBack,
   toggleQ3,
   toggleQ3Rank,
+  toggleQ6Approaches,
   toggleQ9,
 }: FlowProps) {
   const progress = Math.round(
@@ -548,26 +564,39 @@ function SurveyFlow({
         return (
           <QuestionShell
             number={6}
-            question='"It is difficult and expensive to collect enough real-world data or test scenarios to adequately train and validate a robot for our specific environment."'
+            question='"It is difficult to replicate the specific conditions — and the expert judgment required — to adequately train or validate a robot for our environment."'
             description="Rate how strongly you agree or disagree."
           >
             <LikertScale
               value={answers.q6Likert}
               onChange={(v) => setAnswers((a) => ({ ...a, q6Likert: v }))}
             />
-            <div className="pt-5 space-y-2">
-              <p className="text-sm text-white/35">
-                Optional: what have you tried to address this?
+            <div className="pt-5 space-y-3">
+              <p className="text-sm text-white/50 font-medium">
+                Which of the following has your team used to test or validate a robot before deployment? Select all that apply.
               </p>
-              <input
-                type="text"
-                value={answers.q6Open}
-                onChange={(e) =>
-                  setAnswers((a) => ({ ...a, q6Open: e.target.value }))
-                }
-                placeholder="Your approaches…"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-5 py-3 text-sm text-white placeholder:text-white/25 outline-none focus:border-electric-lime/40 transition-colors"
-              />
+              <div className="space-y-2.5">
+                {Q6_APPROACHES_OPTS.map((opt) => (
+                  <SelectOption
+                    key={opt}
+                    label={opt}
+                    selected={answers.q6Approaches.includes(opt)}
+                    onClick={() => toggleQ6Approaches(opt)}
+                  />
+                ))}
+              </div>
+              {answers.q6Approaches.includes("Other") && (
+                <input
+                  autoFocus
+                  type="text"
+                  value={answers.q6ApproachesOther}
+                  onChange={(e) =>
+                    setAnswers((a) => ({ ...a, q6ApproachesOther: e.target.value }))
+                  }
+                  placeholder="Please describe…"
+                  className="w-full bg-white/[0.03] border border-electric-lime/30 rounded-xl px-5 py-3 text-sm text-white placeholder:text-white/25 outline-none focus:border-electric-lime/50 transition-colors mt-1"
+                />
+              )}
             </div>
           </QuestionShell>
         );
@@ -860,6 +889,8 @@ export default function SurveyPage() {
             q5: answers.q5,
             q6_likert: answers.q6Likert,
             q6_open: answers.q6Open || null,
+            q6_approaches: answers.q6Approaches.length > 0 ? answers.q6Approaches : null,
+            q6_approaches_other: answers.q6ApproachesOther || null,
             q7: answers.q7,
             q8: answers.q8,
             q9: answers.q9,
@@ -929,6 +960,15 @@ export default function SurveyPage() {
         return { ...a, q3Top3: [...a.q3Top3, opt] };
       }
       return a;
+    });
+  };
+
+  const toggleQ6Approaches = (opt: string) => {
+    setAnswers((a) => {
+      const selected = a.q6Approaches.includes(opt)
+        ? a.q6Approaches.filter((o) => o !== opt)
+        : [...a.q6Approaches, opt];
+      return { ...a, q6Approaches: selected };
     });
   };
 
@@ -1184,6 +1224,7 @@ export default function SurveyPage() {
             onBack={goBack}
             toggleQ3={toggleQ3}
             toggleQ3Rank={toggleQ3Rank}
+            toggleQ6Approaches={toggleQ6Approaches}
             toggleQ9={toggleQ9}
           />
         )}

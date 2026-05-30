@@ -47,7 +47,7 @@ export function Hero() {
           transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="headline mt-6 text-[clamp(2.25rem,7vw,6.5rem)] max-w-[18ch]"
         >
-          A Human Data Layer for{" "}
+          The Human Data Layer for{" "}
           <span className="bg-gradient-1 bg-clip-text text-transparent animate-gradient-pan [background-size:200%_200%]">
             Robotics
           </span>{" "}

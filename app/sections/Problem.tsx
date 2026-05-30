@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const stats = [
   {
-    value: "£27B+",
+    value: "£21B+",
     label: "Private capital into robotics in 2025 — more than 2× the year before.",
     cite: "PitchBook, 2025",
   },
@@ -15,10 +15,10 @@ const stats = [
     cite: "Boston Consulting Group, Robotics in Industrial Operations, 2024",
   },
   {
-    value: "70%",
+    value: "61%",
     label:
-      "Share of robotics and automation programmes that fail to hit their ROI targets — most of that value lost to slow, brittle physical pilots.",
-    cite: "McKinsey & Company, The State of AI, 2024",
+      "Share of robotics teams that report lacking the internal capability to scale robotics beyond the pilot phase — the gap Mile's readiness infrastructure closes.",
+    cite: "McKinsey & Company, The Robotics Revolution: Scaling Beyond the Pilot Phase, 2025",
   },
 ];
 

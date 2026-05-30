@@ -4,13 +4,13 @@ import { SmoothScroll } from "./components/SmoothScroll";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://milelabs.co"),
-  title: "Mile Robotics. A Human Data Layer for Robotics and Physical AI.",
+  title: "Mile Robotics. The Human Data Layer for Robotics and Physical AI.",
   description:
     "Mile Robotics turns immersive, game-like simulations into a human data layer for robots. Every action, hesitation, and correction becomes training data for physical AI.",
   openGraph: {
-    title: "Mile Robotics. A Human Data Layer for Robotics and Physical AI.",
+    title: "Mile Robotics. The Human Data Layer for Robotics and Physical AI.",
     description:
-      "A Human Data Layer for Robotics and Physical AI.",
+      "The Human Data Layer for Robotics and Physical AI.",
     url: "https://milelabs.co",
     siteName: "Mile Robotics",
     type: "website",

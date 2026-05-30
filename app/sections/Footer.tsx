@@ -21,7 +21,7 @@ export function Footer() {
               />
             </a>
             <p className="mt-6 text-sm text-white/55 max-w-[40ch] leading-relaxed">
-              A human data layer for robotics and physical AI. Built in
+              The human data layer for robotics and physical AI. Built in
               Manchester, United Kingdom.
             </p>
           </div>

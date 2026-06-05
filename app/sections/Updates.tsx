@@ -27,13 +27,13 @@ const row1Updates: Update[] = [
     accent: "bg-emerald-teal/15",
     image: "/updates/robotics-market-research.jpg",
   },
-  {
-    date: "May 2026",
-    tag: "Pilot",
-    title: "Ongoing pilot with Ice Nine Robotics",
-    accent: "bg-sky-blue/15",
-    image: "/updates/icenine-robotics-pilot.jpg",
-  },
+  // {
+  //   date: "May 2026",
+  //   tag: "Pilot",
+  //   title: "Ongoing pilot with Ice Nine Robotics",
+  //   accent: "bg-sky-blue/15",
+  //   image: "/updates/icenine-robotics-pilot.jpg",
+  // },
   {
     date: "Jul 2026",
     tag: "Programme",

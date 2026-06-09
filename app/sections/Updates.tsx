@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
@@ -12,7 +12,7 @@ type Update = {
   image: string;
 };
 
-const row1Updates: Update[] = [
+const updates: Update[] = [
   {
     date: "Mar 2026",
     tag: "Award",
@@ -27,201 +27,211 @@ const row1Updates: Update[] = [
     accent: "bg-emerald-teal/15",
     image: "/updates/robotics-market-research.jpg",
   },
-  // {
-  //   date: "May 2026",
-  //   tag: "Pilot",
-  //   title: "Ongoing pilot with Ice Nine Robotics",
-  //   accent: "bg-sky-blue/15",
-  //   image: "/updates/icenine-robotics-pilot.jpg",
-  // },
+  {
+    date: "May 2026",
+    tag: "Pilot",
+    title: "Ongoing pilot with Ice Nine Robotics",
+    accent: "bg-sky-blue/15",
+    image: "/updates/icenine-robotics-pilot.jpg",
+  },
   {
     date: "Jul 2026",
     tag: "Programme",
-    title: "Cohort 7 — Greater Manchester Digital Security Hub (DiSH) Accelerator",
+    title:
+      "Cohort 7 — Greater Manchester Digital Security Hub (DiSH) Accelerator",
     accent: "bg-coral/15",
     image: "/updates/dish-accelerator-cohort-7.jpg",
   },
 ];
 
-// TODO: Re-enable row2Updates when ready
-// const row2Updates: Update[] = [
-//   {
-//     date: "Mar 2026",
-//     tag: "Award",
-//     title: "Winner — Manchester Cyber and AI Hackathon",
-//     accent: "bg-electric-violet/15",
-//     image: "/updates/manchester-cyber-ai-hackathon.jpg",
-//   },
-//   {
-//     date: "Mar 2026",
-//     tag: "Research",
-//     title: "Direct market research with robotics industry leaders",
-//     accent: "bg-emerald-teal/15",
-//     image: "/updates/robotics-market-research.jpg",
-//   },
-//   {
-//     date: "May 2026",
-//     tag: "Milestone",
-//     title: "Registered with Companies House",
-//     accent: "bg-electric-lime/15",
-//     image: "/updates/companies-house-registration.jpg",
-//   },
-//   {
-//     date: "May 2026",
-//     tag: "Pilot",
-//     title: "Ongoing pilot with Ice Nine Robotics",
-//     accent: "bg-sky-blue/15",
-//     image: "/updates/icenine-robotics-pilot.jpg",
-//   },
-//   {
-//     date: "Jul 2026",
-//     tag: "Programme",
-//     title: "Cohort 7 — Greater Manchester Digital Security Hub (DiSH) Accelerator",
-//     accent: "bg-coral/15",
-//     image: "/updates/dish-accelerator-cohort-7.jpg",
-//   },
-//   {
-//     date: "From Jun 2026",
-//     tag: "Funding",
-//     title: "Non-dilutive grant funding round",
-//     accent: "bg-electric-violet/15",
-//     image: "/updates/grant-funding-round.jpg",
-//   },
-// ];
+/* ────────────────────────────────────────────────────────
+   Bento layout engine
+   
+   4 structurally unique patterns for 4 items in a 2-col,
+   3-row grid.  Each pattern has exactly one "wide" card
+   (2 cols × 1 row) and one "tall" card (1 col × 2 rows),
+   filling 6 cells perfectly (2 + 2 + 1 + 1 = 6).
+   
+   Combined with card shuffling → 4 patterns × 24 shuffles
+   = 96 visually unique layouts per refresh.
+──────────────────────────────────────────────────────── */
 
-const AUTO_SCROLL_PX_PER_SEC = 28;
-const RESUME_AFTER_IDLE_MS = 1500;
+type GridPlacement = {
+  colStart: number;
+  colEnd: number;
+  rowStart: number;
+  rowEnd: number;
+};
 
-function UpdateCard({ u, ariaHidden }: { u: Update; ariaHidden?: boolean }) {
+const BENTO_PATTERNS: GridPlacement[][] = [
+  // A — Wide top, tall bottom-left
+  //  ┌──────────────┐
+  //  │  wide (2×1)  │
+  //  ├──────┬───────┤
+  //  │ tall │   ·   │
+  //  │(1×2) ├───────┤
+  //  │      │   ·   │
+  //  └──────┴───────┘
+  [
+    { colStart: 1, colEnd: 3, rowStart: 1, rowEnd: 2 },
+    { colStart: 1, colEnd: 2, rowStart: 2, rowEnd: 4 },
+    { colStart: 2, colEnd: 3, rowStart: 2, rowEnd: 3 },
+    { colStart: 2, colEnd: 3, rowStart: 3, rowEnd: 4 },
+  ],
+
+  // B — Wide top, tall bottom-right
+  //  ┌──────────────┐
+  //  │  wide (2×1)  │
+  //  ├──────┬───────┤
+  //  │   ·  │  tall │
+  //  ├──────┤ (1×2) │
+  //  │   ·  │       │
+  //  └──────┴───────┘
+  [
+    { colStart: 1, colEnd: 3, rowStart: 1, rowEnd: 2 },
+    { colStart: 1, colEnd: 2, rowStart: 2, rowEnd: 3 },
+    { colStart: 2, colEnd: 3, rowStart: 2, rowEnd: 4 },
+    { colStart: 1, colEnd: 2, rowStart: 3, rowEnd: 4 },
+  ],
+
+  // C — Wide bottom, tall top-left
+  //  ┌──────┬───────┐
+  //  │ tall │   ·   │
+  //  │(1×2) ├───────┤
+  //  │      │   ·   │
+  //  ├──────┴───────┤
+  //  │  wide (2×1)  │
+  //  └──────────────┘
+  [
+    { colStart: 1, colEnd: 2, rowStart: 1, rowEnd: 3 },
+    { colStart: 2, colEnd: 3, rowStart: 1, rowEnd: 2 },
+    { colStart: 2, colEnd: 3, rowStart: 2, rowEnd: 3 },
+    { colStart: 1, colEnd: 3, rowStart: 3, rowEnd: 4 },
+  ],
+
+  // D — Wide bottom, tall top-right
+  //  ┌──────┬───────┐
+  //  │   ·  │  tall │
+  //  ├──────┤ (1×2) │
+  //  │   ·  │       │
+  //  ├──────┴───────┤
+  //  │  wide (2×1)  │
+  //  └──────────────┘
+  [
+    { colStart: 1, colEnd: 2, rowStart: 1, rowEnd: 2 },
+    { colStart: 2, colEnd: 3, rowStart: 1, rowEnd: 3 },
+    { colStart: 1, colEnd: 2, rowStart: 2, rowEnd: 3 },
+    { colStart: 1, colEnd: 3, rowStart: 3, rowEnd: 4 },
+  ],
+];
+
+function shuffleArray<T>(arr: T[]): T[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+function isFeaturedSlot(p: GridPlacement): boolean {
+  return p.colEnd - p.colStart > 1 || p.rowEnd - p.rowStart > 1;
+}
+
+/* ── Card ──────────────────────────────────────────── */
+
+function BentoCard({
+  update,
+  placement,
+  index,
+}: {
+  update: Update;
+  placement: GridPlacement;
+  index: number;
+}) {
+  const featured = isFeaturedSlot(placement);
+
   return (
-    <article
-      aria-hidden={ariaHidden}
-      className={`shrink-0 w-[200px] sm:w-[230px] md:w-[260px] rounded-xl sm:rounded-2xl border border-white/10 ${u.accent} overflow-hidden backdrop-blur-sm`}
+    <motion.article
+      initial={{ opacity: 0, y: 28, scale: 0.96 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{
+        duration: 0.65,
+        delay: 0.08 + index * 0.12,
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }}
+      className="bento-card group relative rounded-xl sm:rounded-2xl overflow-hidden border border-white/[0.08] hover:border-white/[0.18] transition-[border-color,box-shadow] duration-500 cursor-default"
+      style={
+        {
+          "--bento-col-start": placement.colStart,
+          "--bento-col-end": placement.colEnd,
+          "--bento-row-start": placement.rowStart,
+          "--bento-row-end": placement.rowEnd,
+        } as React.CSSProperties
+      }
     >
-      <div className="relative w-full aspect-video bg-white/5">
+      {/* Full-bleed image */}
+      <div className="absolute inset-0">
         <Image
-          src={u.image}
-          alt={u.title}
+          src={update.image}
+          alt={update.title}
           fill
-          sizes="(max-width: 640px) 200px, (max-width: 768px) 230px, 260px"
-          className="object-cover"
+          sizes={
+            featured
+              ? "(max-width: 768px) 100vw, 66vw"
+              : "(max-width: 768px) 100vw, 33vw"
+          }
+          className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
         />
       </div>
-      <div className="p-4 sm:p-5">
-        <div className="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-white/50">
-          <span>{u.date}</span>
-          <span className="text-electric-lime">{u.tag}</span>
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/10" />
+
+      {/* Content */}
+      <div
+        className={`relative h-full flex flex-col justify-end ${featured ? "p-6 sm:p-8" : "p-5 sm:p-6"}`}
+      >
+        <div className="flex items-center gap-3">
+          <span
+            className={`text-[10px] sm:text-[11px] px-2.5 py-1 rounded-full ${update.accent} backdrop-blur-sm text-white/80 uppercase tracking-[0.14em] font-medium`}
+          >
+            {update.tag}
+          </span>
+          <span className="text-[11px] text-white/40 tracking-wide">
+            {update.date}
+          </span>
         </div>
-        <h3 className="mt-3 text-base font-medium leading-snug line-clamp-2">
-          {u.title}
+        <h3
+          className={`mt-3 font-medium leading-snug text-white/90 ${
+            featured
+              ? "text-lg sm:text-xl lg:text-2xl max-w-[30ch]"
+              : "text-base line-clamp-2"
+          }`}
+        >
+          {update.title}
         </h3>
       </div>
-    </article>
+
+      {/* Hover glow */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl shadow-[inset_0_0_40px_rgba(169,240,0,0.03)]" />
+    </motion.article>
   );
 }
 
-export function Updates() {
-  const track1Ref = useRef<HTMLDivElement>(null);
-  // const track2Ref = useRef<HTMLDivElement>(null); // TODO: Re-enable with row2
-  const pausedRef = useRef(false);
-  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>();
+/* ── Section ───────────────────────────────────────── */
 
-  const bumpPause = () => {
-    pausedRef.current = true;
-    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    resumeTimerRef.current = setTimeout(() => {
-      pausedRef.current = false;
-    }, RESUME_AFTER_IDLE_MS);
-  };
+export function Updates() {
+  const [layout, setLayout] = useState<{
+    cards: Update[];
+    pattern: GridPlacement[];
+  } | null>(null);
 
   useEffect(() => {
-    const el1 = track1Ref.current;
-    // const el2 = track2Ref.current; // TODO: Re-enable with row2
-    if (!el1) return;
-
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (prefersReduced) return;
-
-    // TODO: Re-enable with row2
-    // el2.scrollLeft = el2.scrollWidth / 2;
-
-    let last = performance.now();
-    let rafId = 0;
-    let acc1 = 0;
-    // let acc2 = 0; // TODO: Re-enable with row2
-
-    const tick = (now: number) => {
-      const dt = Math.min((now - last) / 1000, 1 / 30);
-      last = now;
-
-      if (!pausedRef.current) {
-        // Row 1 — scrolls left
-        acc1 += AUTO_SCROLL_PX_PER_SEC * dt;
-        const whole1 = Math.floor(acc1);
-        if (whole1 > 0) {
-          el1.scrollLeft += whole1;
-          acc1 -= whole1;
-        }
-        const half1 = el1.scrollWidth / 2;
-        if (half1 > 0 && el1.scrollLeft >= half1) {
-          el1.scrollLeft -= half1;
-        }
-
-        // TODO: Re-enable with row2
-        // // Row 2 — scrolls right
-        // acc2 += AUTO_SCROLL_PX_PER_SEC * dt;
-        // const whole2 = Math.floor(acc2);
-        // if (whole2 > 0) {
-        //   el2.scrollLeft -= whole2;
-        //   acc2 -= whole2;
-        // }
-        // const half2 = el2.scrollWidth / 2;
-        // if (half2 > 0 && el2.scrollLeft <= 0) {
-        //   el2.scrollLeft += half2;
-        // }
-      }
-
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-
-    const onEnter = () => {
-      pausedRef.current = true;
-      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-    };
-    const onLeave = () => { pausedRef.current = false; };
-    const onWheel = () => bumpPause();
-    const onTouchStart = onEnter;
-    const onTouchEnd = () => bumpPause();
-
-    [el1].forEach((el) => {
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
-      el.addEventListener("wheel", onWheel, { passive: true });
-      el.addEventListener("touchstart", onTouchStart, { passive: true });
-      el.addEventListener("touchend", onTouchEnd);
-    });
-
-    const onVisibility = () => {
-      if (document.hidden) pausedRef.current = true;
-      else bumpPause();
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
-      [el1].forEach((el) => {
-        el.removeEventListener("mouseenter", onEnter);
-        el.removeEventListener("mouseleave", onLeave);
-        el.removeEventListener("wheel", onWheel);
-        el.removeEventListener("touchstart", onTouchStart);
-        el.removeEventListener("touchend", onTouchEnd);
-      });
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
+    const shuffled = shuffleArray(updates);
+    const pattern =
+      BENTO_PATTERNS[Math.floor(Math.random() * BENTO_PATTERNS.length)];
+    setLayout({ cards: shuffled, pattern });
   }, []);
 
   return (
@@ -253,37 +263,23 @@ export function Updates() {
           Quiet, steady progress — pilots, awards, research, and the moments
           worth marking.
         </p>
-      </div>
 
-      <div className="relative mt-12 sm:mt-14 flex flex-col gap-6">
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 sm:w-24 z-10 bg-gradient-to-r from-black to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-12 sm:w-24 z-10 bg-gradient-to-l from-black to-transparent" />
-
-        {/* Row 1 — scrolls left */}
-        <div
-          ref={track1Ref}
-          className="flex gap-6 overflow-x-auto overscroll-x-contain px-5 sm:px-6 lg:px-10 no-scrollbar"
-        >
-          {row1Updates.map((u) => (
-            <UpdateCard key={`a-${u.title}`} u={u} />
-          ))}
-          {row1Updates.map((u) => (
-            <UpdateCard key={`b-${u.title}`} u={u} ariaHidden />
-          ))}
+        {/* Bento Grid */}
+        <div className="bento-grid mt-12 sm:mt-16">
+          {layout ? (
+            layout.cards.map((update, i) => (
+              <BentoCard
+                key={update.title}
+                update={update}
+                placement={layout.pattern[i]}
+                index={i}
+              />
+            ))
+          ) : (
+            /* Reserve space to prevent layout shift during hydration */
+            <div className="col-span-full min-h-[600px] md:min-h-[700px]" />
+          )}
         </div>
-
-        {/* TODO: Re-enable Row 2 when ready */}
-        {/* <div
-          ref={track2Ref}
-          className="flex gap-6 overflow-x-auto overscroll-x-contain px-5 sm:px-6 lg:px-10 no-scrollbar"
-        >
-          {row2Updates.map((u) => (
-            <UpdateCard key={`a-${u.title}`} u={u} />
-          ))}
-          {row2Updates.map((u) => (
-            <UpdateCard key={`b-${u.title}`} u={u} ariaHidden />
-          ))}
-        </div> */}
       </div>
     </section>
   );

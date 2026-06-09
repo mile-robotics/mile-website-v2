@@ -171,6 +171,31 @@ body {
   display: none;              /* Chrome, Safari, Opera */
 }
 
+/* Bento Grid */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.bento-grid > .bento-card {
+  min-height: 280px;
+}
+
+@media (min-width: 768px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 220px;
+    gap: 20px;
+  }
+
+  .bento-grid > .bento-card {
+    grid-column: var(--bento-col-start) / var(--bento-col-end);
+    grid-row: var(--bento-row-start) / var(--bento-row-end);
+    min-height: unset;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

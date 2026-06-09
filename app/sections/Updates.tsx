@@ -43,18 +43,18 @@ const updates: Update[] = [
     image: "/updates/dish-accelerator-cohort-7.jpg",
   },
   {
-    date: "Jun 2026",
-    tag: "Programme",
-    title: "Placeholder Title Here",
-    accent: "bg-coral/15",
-    image: "/updates/manchester-cyber-ai-hackathon.jpg",
+    date: "Apr 2026",
+    tag: "Feature",
+    title: "The Clutter Problem in Robotics",
+    accent: "bg-emerald-teal/15",
+    image: "/updates/clutter-problem.jpg",
   },
   {
     date: "Mar 2026",
-    tag: "Grant",
-    title: "Placeholder Title Here",
-    accent: "bg-electric-violet/15",
-    image: "/updates/manchester-cyber-ai-hackathon.jpg",
+    tag: "Event",
+    title: "NVIDIA GTC",
+    accent: "bg-emerald-teal/15",
+    image: "/updates/nvidia-gtc.jpg",
   },
 ];
 

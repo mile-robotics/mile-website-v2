@@ -9,9 +9,9 @@ const stats = [
     cite: "PitchBook, 2025",
   },
   {
-    value: "£250K+",
+    value: "4+ months at £250K+",
     label:
-      "Proving readiness requires a physical pilot: 4+ months, £250K+, often unsafe/barred in regulated sites. We've experienced this while working together as a robotics technical team for 3+ years",
+      "Proving readiness requires a physical pilot, often unsafe/barred in regulated sites.",
     cite: "Interact Analysis, The Mobile Robot Market Report, 2026",
   },
   {

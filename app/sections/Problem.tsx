@@ -9,13 +9,13 @@ const stats = [
     cite: "PitchBook, 2025",
   },
   {
-    value: "4+ months at £250K+",
+    value: "4+ months, £250K+",
     label:
       "Proving readiness requires a physical pilot, often unsafe/barred in regulated sites.",
     cite: "Interact Analysis, The Mobile Robot Market Report, 2026",
   },
   {
-    value: "61%",
+    value: "~61%",
     label:
       "Share of robotics teams that report lacking the internal capability to scale robotics beyond the pilot phase — the gap Mile's readiness infrastructure closes.",
     cite: "McKinsey & Company, The Robotics Revolution: Scaling Beyond the Pilot Phase, 2025",

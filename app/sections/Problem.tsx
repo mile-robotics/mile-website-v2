@@ -9,10 +9,10 @@ const stats = [
     cite: "PitchBook, 2025",
   },
   {
-    value: "£1M+",
+    value: "£250K+",
     label:
-      "Typical end-to-end cost of a single physical-robot pilot before deployment can be approved — hardware, integration, site time, and human factors combined.",
-    cite: "Boston Consulting Group, Robotics in Industrial Operations, 2024",
+      "Proving readiness requires a physical pilot: 4+ months, £250K+, often unsafe/barred in regulated sites. We've experienced this while working together as a robotics technical team for 3+ years",
+    cite: "Interact Analysis, The Mobile Robot Market Report, 2026",
   },
   {
     value: "61%",

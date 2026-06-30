@@ -1,35 +1,41 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 export function Hero() {
+  const containerRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Parallax: starts at natural position (no top clip), drifts down as section scrolls up
+  const y = useTransform(scrollYProgress, [0, 1], ["-5%", "15%"]);
+
   return (
     <section
       id="hero"
-      className="relative isolate overflow-hidden min-h-[100svh] flex items-center"
+      ref={containerRef}
+      className="relative isolate overflow-hidden min-h-[100svh] flex items-center bg-black"
     >
-      {/* Animated aurora + grid backdrop */}
-      <div className="aurora" aria-hidden />
-      <div className="absolute inset-0 grid-backdrop opacity-50" aria-hidden />
-
-      {/*
-        Video banner slot — drop /public/hero.mp4 to enable.
-        Hidden until a video file is provided so we don't render an empty placeholder.
-      */}
-      <video
-        className="absolute inset-0 z-[-1] h-full w-full object-cover opacity-40 mix-blend-screen [&:not([data-loaded])]:hidden"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        onLoadedData={(e) =>
-          (e.currentTarget as HTMLVideoElement).setAttribute("data-loaded", "true")
-        }
-        aria-hidden
+      {/* Parallax Background Image */}
+      <motion.div
+        style={{ y }}
+        className="absolute inset-0 z-[-2]"
       >
-        <source src="/hero.mp4" type="video/mp4" />
-      </video>
+        <img
+          src="/images/voxel-arm.jpg"
+          alt="Hero Background"
+          className="w-full h-full object-cover object-top"
+        />
+        <div className="absolute inset-0 bg-black/55" />
+      </motion.div>
+
+      {/* Animated aurora + grid backdrop */}
+      <div className="aurora z-[-1]" aria-hidden />
+      <div className="absolute inset-0 grid-backdrop opacity-50 z-[-1]" aria-hidden />
 
       <div className="relative mx-auto max-w-container w-full px-5 sm:px-6 lg:px-10 pt-32 sm:pt-36 pb-20 sm:pb-24">
         <motion.p

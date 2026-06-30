@@ -1,6 +1,7 @@
 import { Chrome } from "./components/Chrome";
 import { Hero } from "./sections/Hero";
 import { Problem } from "./sections/Problem";
+import { VideoTransition } from "./sections/VideoTransition";
 import { Solution } from "./sections/Solution";
 import { Updates } from "./sections/Updates";
 import { CTA } from "./sections/CTA";
@@ -12,6 +13,7 @@ export default function Home() {
       <Chrome />
       <Hero />
       <Problem />
+      <VideoTransition />
       <Solution />
       <Updates />
       <CTA />

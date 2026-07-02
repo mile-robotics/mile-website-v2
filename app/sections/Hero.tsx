@@ -14,10 +14,22 @@ import {
 const TOTAL_FRAMES = 240; // frame_000 → frame_239
 const FRAME_PATH_PREFIX = "/images/image-sequence/frame_";
 
+/**
+ * Scroll-phase breakpoints (fraction of total 400vh scroll):
+ *  0.00 → 0.65  Image sequence plays (frames 0–239)
+ *  0.65 → 0.80  Content fades/slides IN, last frame stays
+ *  0.80 → 0.92  Content fully visible, last frame stays
+ *  0.92 → 1.00  Content fades OUT for clean transition to next section
+ */
+const SEQ_END = 0.65; // scroll fraction where image sequence finishes
+const CONTENT_IN_START = 0.60; // content starts fading in (slight overlap)
+const CONTENT_IN_END = 0.75; // content fully visible
+const CONTENT_OUT_START = 0.88; // content starts fading out
+const CONTENT_OUT_END = 1.0; // content fully gone
+
 /** Build the src string for a given frame index (0-based). */
 function frameSrc(index: number): string {
   const padded = String(index).padStart(3, "0");
-  // The delay portion varies slightly but follows this pattern
   const delay = index % 3 === 2 ? "0.034s" : "0.033s";
   return `${FRAME_PATH_PREFIX}${padded}_delay-${delay}.png`;
 }
@@ -81,7 +93,6 @@ export function Hero() {
   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    // Use devicePixelRatio for crisp rendering on retina displays
     const dpr = window.devicePixelRatio || 1;
     canvas.width = window.innerWidth * dpr;
     canvas.height = window.innerHeight * dpr;
@@ -112,19 +123,16 @@ export function Hero() {
       const cw = window.innerWidth;
       const ch = window.innerHeight;
 
-      // Cover the viewport (object-fit: cover equivalent)
       const imgRatio = img.naturalWidth / img.naturalHeight;
       const canvasRatio = cw / ch;
       let drawW: number, drawH: number, dx: number, dy: number;
 
       if (imgRatio > canvasRatio) {
-        // Image is wider — fit height, crop sides
         drawH = ch;
         drawW = ch * imgRatio;
         dx = (cw - drawW) / 2;
         dy = 0;
       } else {
-        // Image is taller — fit width, crop top/bottom
         drawW = cw;
         drawH = cw / imgRatio;
         dx = 0;
@@ -142,17 +150,19 @@ export function Hero() {
     if (firstLoaded) drawFrame(0);
   }, [firstLoaded, drawFrame]);
 
-  /* ---- Map scroll progress → frame index via motion event ---- */
+  /* ---- Map scroll progress → frame index ---- */
+  /* Sequence plays across 0 → SEQ_END, then holds last frame */
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    // Remap: scroll 0→SEQ_END maps to frame 0→(TOTAL_FRAMES-1)
+    const seqProgress = Math.min(1, Math.max(0, latest / SEQ_END));
     const frameIndex = Math.min(
       TOTAL_FRAMES - 1,
-      Math.max(0, Math.floor(latest * TOTAL_FRAMES))
+      Math.max(0, Math.floor(seqProgress * TOTAL_FRAMES))
     );
 
     if (frameIndex !== currentFrameRef.current) {
       currentFrameRef.current = frameIndex;
 
-      // Cancel any pending rAF to coalesce updates
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
         drawFrame(frameIndex);
@@ -161,9 +171,79 @@ export function Hero() {
     }
   });
 
-  /* ---- Content opacity fades out as user scrolls through ---- */
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0]);
-  const contentY = useTransform(scrollYProgress, [0, 0.35], ["0%", "-8%"]);
+  /* ---------------------------------------------------------------- */
+  /*  Scroll-driven transforms for content reveal                     */
+  /* ---------------------------------------------------------------- */
+
+  // Overlay / aurora / grid: fade in as sequence ends, fade out at section end
+  const overlayOpacity = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START, CONTENT_IN_END, CONTENT_OUT_START, CONTENT_OUT_END],
+    [0, 1, 1, 0]
+  );
+
+  // Content: fade in + slide up after sequence, then fade out
+  const contentOpacity = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START, CONTENT_IN_END, CONTENT_OUT_START, CONTENT_OUT_END],
+    [0, 1, 1, 0]
+  );
+  const contentY = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START, CONTENT_IN_END, CONTENT_OUT_START, CONTENT_OUT_END],
+    ["6%", "0%", "0%", "-8%"]
+  );
+
+  // Staggered reveals for individual content elements (eyebrow, h1, subhead, buttons)
+  const eyebrowOpacity = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START, CONTENT_IN_START + 0.04, CONTENT_OUT_START, CONTENT_OUT_END],
+    [0, 1, 1, 0]
+  );
+  const eyebrowY = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START, CONTENT_IN_START + 0.04],
+    [12, 0]
+  );
+
+  const headlineOpacity = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START + 0.02, CONTENT_IN_START + 0.08, CONTENT_OUT_START, CONTENT_OUT_END],
+    [0, 1, 1, 0]
+  );
+  const headlineY = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START + 0.02, CONTENT_IN_START + 0.08],
+    [24, 0]
+  );
+
+  const subheadOpacity = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START + 0.05, CONTENT_IN_START + 0.1, CONTENT_OUT_START, CONTENT_OUT_END],
+    [0, 1, 1, 0]
+  );
+  const subheadY = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START + 0.05, CONTENT_IN_START + 0.1],
+    [16, 0]
+  );
+
+  const ctaOpacity = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START + 0.07, CONTENT_IN_START + 0.12, CONTENT_OUT_START, CONTENT_OUT_END],
+    [0, 1, 1, 0]
+  );
+  const ctaY = useTransform(
+    scrollYProgress,
+    [CONTENT_IN_START + 0.07, CONTENT_IN_START + 0.12],
+    [16, 0]
+  );
+
+  const scrollIndicatorOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.01, CONTENT_IN_START - 0.05, CONTENT_IN_START],
+    [1, 1, 1, 0]
+  );
 
   return (
     <section
@@ -181,38 +261,47 @@ export function Hero() {
           aria-hidden="true"
         />
 
-        {/* Dark overlay for text legibility */}
-        <div className="absolute inset-0 z-[1] bg-black/50 pointer-events-none" />
+        {/* Dark overlay for text legibility — hidden during sequence */}
+        <motion.div
+          style={{ opacity: overlayOpacity }}
+          className="absolute inset-0 z-[1] bg-black/50 pointer-events-none"
+        />
 
-        {/* Animated aurora + grid backdrop */}
-        <div className="aurora z-[2]" aria-hidden />
-        <div
+        {/* Animated aurora + grid backdrop — hidden during sequence */}
+        <motion.div
+          style={{ opacity: overlayOpacity }}
+          className="aurora z-[2]"
+          aria-hidden
+        />
+        <motion.div
+          style={{ opacity: overlayOpacity }}
           className="absolute inset-0 grid-backdrop opacity-50 z-[2]"
           aria-hidden
         />
 
-        {/* Hero content */}
+        {/* Scroll indicator — visible during the sequence phase */}
+        <motion.div
+          style={{ opacity: scrollIndicatorOpacity }}
+          className="hidden sm:flex absolute bottom-10 left-6 lg:left-10 z-[5] text-xs uppercase tracking-[0.2em] text-white/50 items-center gap-3"
+        >
+          <span className="block h-px w-10 bg-white/40" />
+          Scroll
+        </motion.div>
+
+        {/* Hero content — reveals after image sequence finishes */}
         <motion.div
           style={{ opacity: contentOpacity, y: contentY }}
           className="relative z-[3] mx-auto max-w-container w-full px-5 sm:px-6 lg:px-10 pt-32 sm:pt-36 pb-20 sm:pb-24 h-full flex flex-col justify-center"
         >
           <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ opacity: eyebrowOpacity, y: eyebrowY }}
             className="eyebrow"
           >
             Multimodal Immersive Lab Environments
           </motion.p>
 
           <motion.h1
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.9,
-              delay: 0.15,
-              ease: [0.22, 1, 0.36, 1],
-            }}
+            style={{ opacity: headlineOpacity, y: headlineY }}
             className="headline mt-6 text-[clamp(2.25rem,6.5vw,6rem)] max-w-[18ch]"
           >
             The Human Data Layer for{" "}
@@ -227,9 +316,7 @@ export function Hero() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45 }}
+            style={{ opacity: subheadOpacity, y: subheadY }}
             className="subhead mt-6 sm:mt-8 max-w-[58ch] text-base sm:text-lg md:text-xl"
           >
             We turn immersive, game-like simulations into training data for
@@ -238,9 +325,7 @@ export function Hero() {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.65 }}
+            style={{ opacity: ctaOpacity, y: ctaY }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
             <a
@@ -270,17 +355,6 @@ export function Hero() {
             >
               See how it works
             </a>
-          </motion.div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.2 }}
-            className="hidden sm:flex absolute bottom-10 left-6 lg:left-10 text-xs uppercase tracking-[0.2em] text-white/50 items-center gap-3"
-          >
-            <span className="block h-px w-10 bg-white/40" />
-            Scroll
           </motion.div>
         </motion.div>
       </div>
